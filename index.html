@@ -211,11 +211,20 @@ html[data-theme="ink"] .hero-art{filter:invert(1) grayscale(1) contrast(.95);mix
 /* ---- materials / 资料 ---- */
 .mat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .mat-card{
-  position:relative;display:flex;flex-direction:column;gap:12px;min-height:158px;padding:20px 18px;
+  position:relative;display:flex;flex-direction:column;min-height:0;padding:0;overflow:hidden;
   border:1px solid var(--line);background:var(--paper);text-decoration:none;color:var(--ink);
   transition:transform .35s ease,border-color .35s ease,background .35s ease,box-shadow .35s ease;
 }
 .mat-card:hover{transform:translateY(-4px);border-color:var(--line-strong);background:var(--paper-2);box-shadow:0 8px 22px rgba(27,26,28,.06)}
+.mat-img{
+  display:block;width:100%;height:92px;object-fit:cover;object-position:center;
+  filter:grayscale(1) contrast(.96);mix-blend-mode:multiply;opacity:.9;
+  border-bottom:1px solid var(--line);
+  transition:opacity .4s ease,transform .6s ease;
+}
+html[data-theme="ink"] .mat-img{filter:invert(1) grayscale(1) contrast(.94);mix-blend-mode:screen;opacity:.55;border-color:var(--line-strong)}
+.mat-card:hover .mat-img{opacity:1;transform:scale(1.03)}
+.mat-txt{display:flex;flex-direction:column;gap:10px;padding:16px 18px 22px}
 .mat-no{font-family:var(--serif);font-size:9px;letter-spacing:.12em;color:var(--accent)}
 .mat-cn{font-family:var(--serif);font-size:26px;line-height:1.1;letter-spacing:.06em}
 .mat-en{font-size:7px;letter-spacing:.22em;color:var(--muted)}
@@ -225,7 +234,15 @@ html[data-theme="ink"] .hero-art{filter:invert(1) grayscale(1) contrast(.95);mix
 @keyframes matShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 
 /* ---- epilogue / 尾声 ---- */
-.epi{text-align:center;padding:30px 10px 18px}
+.page-epi{position:relative;overflow:hidden}
+.page-epi::before{
+  content:"";position:absolute;inset:0;
+  background:url('assets/ayu-base.jpg') center 30%/cover no-repeat;
+  filter:grayscale(1) contrast(1.05);opacity:.16;mix-blend-mode:multiply;
+}
+html[data-theme="ink"] .page-epi::before{filter:invert(1) grayscale(1);mix-blend-mode:screen;opacity:.10}
+.page-epi > *{position:relative;z-index:1}
+.epi{text-align:center;padding:46px 10px 36px}
 .epi-star{margin:0 0 16px;font-size:12px;letter-spacing:.5em;color:var(--accent)}
 .epi-line{margin:0 0 20px;font-family:var(--serif);font-size:24px;line-height:1.6;letter-spacing:.06em;color:var(--ink)}
 .epi-rule{display:block;width:44px;height:1px;background:var(--accent);margin:0 auto 22px}
@@ -269,8 +286,10 @@ html[data-theme="ink"] .hero-art{filter:invert(1) grayscale(1) contrast(.95);mix
   .profile-list{gap:0 14px;max-width:none;}
   .masthead .status{font-size:7px;letter-spacing:.08em;}
   .mat-grid{grid-template-columns:1fr;gap:10px}
-  .mat-card{min-height:0;padding:14px 16px;gap:8px}
+  .mat-img{height:80px}
+  .mat-txt{padding:13px 16px 18px;gap:8px}
   .mat-cn{font-size:22px}
+  .epi{padding:32px 8px 26px}
   .cv-name{letter-spacing:.14em;text-indent:.14em}
   .cv-line{letter-spacing:.08em}
 }
@@ -468,15 +487,27 @@ html[data-theme="ink"] .hero-art{filter:invert(1) grayscale(1) contrast(.95);mix
       <div class="page-head"><h2 class="page-title">资料 <em>Materials</em></h2><span class="page-ghost">04</span></div>
       <p class="sec-label">Index / 索引 · 点击卡片跳转</p>
       <div class="mat-grid">
-        <a class="mat-card" href="#" data-link="huashu" title="填入链接后可跳转"><span class="mat-no">01</span><span class="mat-cn">话术</span><span class="mat-en">SPEECH / SCRIPTS</span><span class="mat-arrow">↗</span></a>
-        <a class="mat-card" href="#" data-link="banping" title="填入链接后可跳转"><span class="mat-no">02</span><span class="mat-cn">板评</span><span class="mat-en">BOARD REVIEWS</span><span class="mat-arrow">↗</span></a>
-        <a class="mat-card" href="#" data-link="kalei" title="填入链接后可跳转"><span class="mat-no">03</span><span class="mat-cn">卡类</span><span class="mat-en">CARD TYPES</span><span class="mat-arrow">↗</span></a>
+        <a class="mat-card" href="#" data-link="huashu" title="填入链接后可跳转">
+          <img class="mat-img" src="assets/ayu-statue-1.jpg" alt="雕像 · 上段" loading="lazy">
+          <span class="mat-txt"><span class="mat-no">01 · 上</span><span class="mat-cn">话术</span><span class="mat-en">SPEECH / SCRIPTS</span></span>
+          <span class="mat-arrow">↗</span>
+        </a>
+        <a class="mat-card" href="#" data-link="banping" title="填入链接后可跳转">
+          <img class="mat-img" src="assets/ayu-statue-2.jpg" alt="雕像 · 中段" loading="lazy">
+          <span class="mat-txt"><span class="mat-no">02 · 中</span><span class="mat-cn">板评</span><span class="mat-en">BOARD REVIEWS</span></span>
+          <span class="mat-arrow">↗</span>
+        </a>
+        <a class="mat-card" href="#" data-link="kalei" title="填入链接后可跳转">
+          <img class="mat-img" src="assets/ayu-statue-3.jpg" alt="雕像 · 下段" loading="lazy">
+          <span class="mat-txt"><span class="mat-no">03 · 下</span><span class="mat-cn">卡类</span><span class="mat-en">CARD TYPES</span></span>
+          <span class="mat-arrow">↗</span>
+        </a>
       </div>
-      <p class="hint">✦ &nbsp; 三张卡片均为可放置跳转链接的元素；在源码 <b>MATERIAL_LINKS</b> 中填入对应网址即可生效。</p>
+      <p class="hint">✦ &nbsp; 同一尊像自上而下均分为三段 · 三张卡片均为可放置跳转链接的元素；在源码 <b>MATERIAL_LINKS</b> 中填入对应网址即可生效。</p>
     </article>
 
     <!-- 05 EPILOGUE / 尾声 -->
-    <article class="page" role="tabpanel" data-index="4">
+    <article class="page page-epi" role="tabpanel" data-index="4">
       <div class="page-head"><h2 class="page-title">尾声 <em>Epilogue</em></h2><span class="page-ghost">05</span></div>
       <div class="epi">
         <p class="epi-star">✦</p>

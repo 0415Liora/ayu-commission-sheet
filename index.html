@@ -137,6 +137,12 @@ html[data-theme="ink"] .finale-bg{filter:invert(1) grayscale(1);mix-blend-mode:s
 .fin-back span{font-family:var(--serif);font-size:11px;margin-left:10px;color:var(--muted)}
 .fin-back:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 .fin-back:hover span{color:var(--paper)}
+.fin-credit{
+  position:absolute;left:50%;bottom:30px;transform:translateX(-50%);
+  margin:0;z-index:2;white-space:nowrap;
+  font-family:var(--serif);font-size:10px;letter-spacing:.26em;
+  color:var(--muted);opacity:.85;
+}
 
 /* ---- masthead ---- */
 .masthead{display:flex;justify-content:space-between;align-items:center;gap:18px;padding-bottom:16px;border-bottom:1px solid var(--line)}
@@ -328,6 +334,7 @@ html[data-theme="ink"] .mat-ov::before{background:linear-gradient(90deg,var(--ov
   .cv-name{letter-spacing:.14em;text-indent:.14em}
   .cv-line{letter-spacing:.08em}
   .fin-line{font-size:19px;letter-spacing:.01em}
+  .fin-credit{font-size:9px;letter-spacing:.16em;bottom:20px}
 }
 </style>
 </head>
@@ -394,6 +401,7 @@ html[data-theme="ink"] .mat-ov::before{background:linear-gradient(90deg,var(--ov
     <p class="fin-sub">Do not go gentle into that good night.</p>
     <button class="fin-back" id="backBtn" type="button">回到开头 <span>↺</span></button>
   </div>
+  <p class="fin-credit">--由陳引制作--</p>
 </div>
 
 <audio id="bgm" src="assets/ayu.mp3" loop preload="auto"></audio>

@@ -17,6 +17,7 @@
   --line:rgba(27,26,28,.13);
   --line-strong:rgba(27,26,28,.32);
   --accent:#8c3038;
+  --ov:rgba(247,245,241,.88);
   --serif:'Cormorant Garamond','Noto Serif SC','Songti SC','SimSun',Georgia,serif;
   --sans:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;
 }
@@ -29,6 +30,7 @@ html[data-theme="ink"]{
   --line:rgba(240,237,232,.14);
   --line-strong:rgba(240,237,232,.36);
   --accent:#c8777e;
+  --ov:rgba(20,20,22,.86);
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -37,7 +39,7 @@ body{
   font-family:var(--sans);font-weight:300;-webkit-font-smoothing:antialiased;
   transition:background .45s ease,color .45s ease;
 }
-body.cover-on{overflow:hidden;height:100vh}
+body.cover-on,body.finale-on{overflow:hidden;height:100vh}
 .grain{
   position:fixed;inset:0;pointer-events:none;z-index:101;opacity:.035;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -70,7 +72,7 @@ html[data-theme="ink"] body::before{filter:invert(1) grayscale(1);opacity:.045;}
   transition:opacity .9s ease,visibility .9s ease;
 }
 .cover.is-gone{opacity:0;visibility:hidden;pointer-events:none}
-.cover-crosses{position:absolute;inset:0;pointer-events:none;color:var(--ink)}
+.cover-crosses,.finale-crosses{position:absolute;inset:0;pointer-events:none;color:var(--ink)}
 .cv{
   position:absolute;transform:rotate(var(--r));opacity:var(--o);
   animation:drift 9s ease-in-out var(--d) infinite;
@@ -102,6 +104,40 @@ html[data-theme="ink"] .cover-watermark{filter:invert(1) grayscale(1);mix-blend-
 .cv-enter:hover span{color:var(--paper)}
 .cv-tip{position:relative;z-index:1;margin:14px 0 0;font-size:7px;letter-spacing:.26em;color:var(--muted);opacity:.8}
 
+/* ---- 独立尾页 / finale ---- */
+.finale{
+  position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;
+  background:var(--paper);color:var(--ink);overflow:hidden;
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .9s ease,visibility .9s ease;
+}
+.finale.is-open{opacity:1;visibility:visible;pointer-events:auto}
+.finale-bg{
+  position:absolute;inset:0;
+  background:url('assets/ayu-base.jpg') center 30%/cover no-repeat;
+  filter:grayscale(1) contrast(1.05);opacity:.15;mix-blend-mode:multiply;
+}
+html[data-theme="ink"] .finale-bg{filter:invert(1) grayscale(1);mix-blend-mode:screen;opacity:.10}
+.fin-chain{position:absolute;display:flex;align-items:center;margin:0;opacity:.55;pointer-events:none}
+.fin-chain .link{width:17px;height:9px;border:1px solid var(--line-strong);border-radius:50%;margin-left:-6px;transform:rotate(38deg)}
+.fin-chain .link:nth-child(even){transform:rotate(-38deg)}
+.fin-chain .link:first-child{margin-left:0}
+.fin-chain-tl{top:38px;left:36px;transform:rotate(26deg)}
+.fin-chain-br{bottom:38px;right:36px;transform:rotate(26deg)}
+.finale-inner{position:relative;z-index:2;text-align:center;padding:24px;animation:coverIn 1.2s cubic-bezier(.2,.7,.3,1) both}
+.fin-eyebrow{margin:0 0 26px;font-size:9px;letter-spacing:.6em;color:var(--accent)}
+.fin-line{margin:0;font-family:var(--serif);font-weight:300;font-size:clamp(20px,3.4vw,36px);line-height:1.65;letter-spacing:.03em;color:var(--ink)}
+.fin-rule{display:block;width:46px;height:1px;background:var(--accent);margin:30px auto 0}
+.fin-sub{margin:16px 0 0;font-family:var(--serif);font-style:italic;font-size:11px;letter-spacing:.08em;color:var(--muted)}
+.fin-back{
+  margin:46px 0 0;padding:11px 28px;border:1px solid var(--line-strong);
+  background:none;color:var(--ink);font-family:var(--sans);font-size:9px;letter-spacing:.28em;
+  cursor:pointer;transition:background .3s ease,color .3s ease,border-color .3s ease;
+}
+.fin-back span{font-family:var(--serif);font-size:11px;margin-left:10px;color:var(--muted)}
+.fin-back:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.fin-back:hover span{color:var(--paper)}
+
 /* ---- masthead ---- */
 .masthead{display:flex;justify-content:space-between;align-items:center;gap:18px;padding-bottom:16px;border-bottom:1px solid var(--line)}
 .brand{display:flex;align-items:center;gap:12px}
@@ -111,9 +147,20 @@ html[data-theme="ink"] .cover-watermark{filter:invert(1) grayscale(1);mix-blend-
 .brand-text{display:flex;flex-direction:column;gap:4px}
 .brand-name{font-family:var(--serif);font-size:16px;letter-spacing:.28em;line-height:1;}
 .brand-sub{font-size:7px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;}
+.mast-right{display:flex;align-items:center;gap:18px}
 .status{display:flex;align-items:center;gap:8px;font-size:8px;letter-spacing:.2em;color:var(--ink-soft);white-space:nowrap;}
 .dot{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:pulse 2.6s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(140,48,56,.35)}50%{opacity:.55;box-shadow:0 0 0 5px rgba(140,48,56,0)}}
+
+/* ---- 音乐开关 ---- */
+.music-btn{display:flex;align-items:center;gap:8px;padding:0;border:0;background:none;color:var(--ink-soft);cursor:pointer;font-family:var(--sans);font-size:7px;letter-spacing:.24em;transition:color .3s ease}
+.music-btn svg{width:20px;height:18px;display:block;flex:none}
+.music-btn:hover{color:var(--ink)}
+.music-btn.is-on{color:var(--accent)}
+.music-btn.is-on svg{animation:sway 2.4s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(0)}50%{transform:rotate(-9deg)}}
+.music-btn i{font-style:normal;font-family:var(--serif);font-size:9px;letter-spacing:.1em;color:var(--muted)}
+.music-btn.is-on i{color:var(--accent)}
 
 /* ---- hero / 自介 ---- */
 .hero{display:grid;grid-template-columns:1.12fr .88fr;gap:28px;align-items:center;padding:34px 0 30px}
@@ -139,7 +186,7 @@ html[data-theme="ink"] .hero-art{filter:invert(1) grayscale(1) contrast(.95);mix
 .chain .link:first-child{margin-left:0}
 
 /* ---- tabs ---- */
-.tabs{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .tab{
   position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;
   padding:13px 5px;background:none;border:0;border-right:1px solid var(--line);
@@ -208,57 +255,42 @@ html[data-theme="ink"] .hero-art{filter:invert(1) grayscale(1) contrast(.95);mix
 .rule-box b{font-weight:500;color:var(--accent)}
 .sign{margin:18px 0 0;font-family:var(--serif);font-style:italic;font-size:14px;color:var(--muted);}
 
-/* ---- materials / 资料 ---- */
-.mat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+/* ---- materials / 资料：三张图纵向断开又能连上 ---- */
+.mat-stack{display:flex;flex-direction:column;gap:9px;max-width:400px;margin:0 auto}
 .mat-card{
-  position:relative;display:flex;flex-direction:column;min-height:0;padding:0;overflow:hidden;
-  border:1px solid var(--line);background:var(--paper);text-decoration:none;color:var(--ink);
-  transition:transform .35s ease,border-color .35s ease,background .35s ease,box-shadow .35s ease;
+  position:relative;display:block;overflow:hidden;
+  background:var(--paper);text-decoration:none;color:var(--ink);
+  transition:transform .4s ease,box-shadow .4s ease;
 }
-.mat-card:hover{transform:translateY(-4px);border-color:var(--line-strong);background:var(--paper-2);box-shadow:0 8px 22px rgba(27,26,28,.06)}
+.mat-card:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(27,26,28,.08)}
 .mat-img{
-  display:block;width:100%;height:92px;object-fit:cover;object-position:center;
-  filter:grayscale(1) contrast(.96);mix-blend-mode:multiply;opacity:.9;
-  border-bottom:1px solid var(--line);
+  display:block;width:100%;height:auto;
+  filter:grayscale(1) contrast(.96);mix-blend-mode:multiply;opacity:.92;
   transition:opacity .4s ease,transform .6s ease;
 }
-html[data-theme="ink"] .mat-img{filter:invert(1) grayscale(1) contrast(.94);mix-blend-mode:screen;opacity:.55;border-color:var(--line-strong)}
-.mat-card:hover .mat-img{opacity:1;transform:scale(1.03)}
-.mat-txt{display:flex;flex-direction:column;gap:10px;padding:16px 18px 22px}
-.mat-no{font-family:var(--serif);font-size:9px;letter-spacing:.12em;color:var(--accent)}
-.mat-cn{font-family:var(--serif);font-size:26px;line-height:1.1;letter-spacing:.06em}
+html[data-theme="ink"] .mat-img{filter:invert(1) grayscale(1) contrast(.94);mix-blend-mode:screen;opacity:.6}
+.mat-card:hover .mat-img{opacity:1;transform:scale(1.02)}
+.mat-ov{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:5px;padding:0 20px}
+.mat-ov::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--ov) 0%,var(--ov) 22%,rgba(247,245,241,0) 68%)}
+html[data-theme="ink"] .mat-ov::before{background:linear-gradient(90deg,var(--ov) 0%,var(--ov) 22%,rgba(20,20,22,0) 68%)}
+.mat-no,.mat-cn,.mat-en{position:relative;z-index:1}
+.mat-no{font-family:var(--serif);font-size:9px;letter-spacing:.14em;color:var(--accent)}
+.mat-cn{font-family:var(--serif);font-size:23px;line-height:1.1;letter-spacing:.06em;color:var(--ink)}
 .mat-en{font-size:7px;letter-spacing:.22em;color:var(--muted)}
-.mat-arrow{position:absolute;right:16px;bottom:14px;font-family:var(--serif);font-size:16px;color:var(--muted);transition:transform .35s ease,color .35s ease}
-.mat-card:hover .mat-arrow{transform:translate(3px,-3px);color:var(--accent)}
-.mat-card.is-empty{animation:matShake .42s ease}
-@keyframes matShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
-
-/* ---- epilogue / 尾声 ---- */
-.page-epi{position:relative;overflow:hidden}
-.page-epi::before{
-  content:"";position:absolute;inset:0;
-  background:url('assets/ayu-base.jpg') center 30%/cover no-repeat;
-  filter:grayscale(1) contrast(1.05);opacity:.16;mix-blend-mode:multiply;
-}
-html[data-theme="ink"] .page-epi::before{filter:invert(1) grayscale(1);mix-blend-mode:screen;opacity:.10}
-.page-epi > *{position:relative;z-index:1}
-.epi{text-align:center;padding:46px 10px 36px}
-.epi-star{margin:0 0 16px;font-size:12px;letter-spacing:.5em;color:var(--accent)}
-.epi-line{margin:0 0 20px;font-family:var(--serif);font-size:24px;line-height:1.6;letter-spacing:.06em;color:var(--ink)}
-.epi-rule{display:block;width:44px;height:1px;background:var(--accent);margin:0 auto 22px}
-.epi-text{margin:0;font-size:10px;line-height:2.4;letter-spacing:.05em;color:var(--ink-soft)}
-.epi-sign{margin:26px 0 0;font-family:var(--serif);font-style:italic;font-size:14px;color:var(--muted)}
-.epi-end{margin:26px 0 0;font-size:8px;letter-spacing:.42em;color:var(--muted)}
+.mat-arrow{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-family:var(--serif);font-size:16px;color:var(--muted);transition:transform .35s ease,color .35s ease}
+.mat-card:hover .mat-arrow{transform:translate(3px,-50%) translateY(-3px);color:var(--accent)}
 
 /* ---- page nav ---- */
 .page-nav{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:22px;border-top:1px solid var(--line);padding-top:16px;}
 .nav-btn{width:32px;height:28px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line-strong);background:none;color:var(--ink-soft);font-family:var(--serif);font-size:13px;line-height:1;cursor:pointer;transition:background .25s,color .25s,border-color .25s,opacity .25s;}
 .nav-btn:hover:not(:disabled){background:var(--ink);color:var(--paper);border-color:var(--ink);}
 .nav-btn:disabled{opacity:.3;cursor:default;}
+.nav-btn.to-finale{border-color:var(--accent);color:var(--accent)}
+.nav-btn.to-finale:hover{background:var(--accent);color:var(--paper)}
 .pager{display:flex;align-items:center;gap:7px;font-family:var(--serif);font-size:9px;letter-spacing:.1em;color:var(--muted);}
 .pager #pageNow{color:var(--accent);font-size:14px;}
 .pager-bar{position:relative;display:inline-block;width:100px;height:1px;background:var(--line);margin-left:10px}
-.pager-bar i{position:absolute;top:0;left:0;height:1px;width:20%;background:var(--accent);transition:left .45s ease,width .45s ease}
+.pager-bar i{position:absolute;top:0;left:0;height:1px;width:25%;background:var(--accent);transition:left .45s ease,width .45s ease}
 
 @media (max-width:880px){
   body{padding:20px 12px 40px}
@@ -274,6 +306,8 @@ html[data-theme="ink"] .page-epi::before{filter:invert(1) grayscale(1);mix-blend
   .page-ghost{font-size:37px;}
   .tab-en{display:none}
   .cv{opacity:.13}
+  .fin-chain-tl{top:22px;left:18px}
+  .fin-chain-br{bottom:22px;right:18px}
 }
 @media (max-width:560px){
   .tab-cn{font-size:9px;letter-spacing:.06em;}
@@ -285,13 +319,14 @@ html[data-theme="ink"] .page-epi::before{filter:invert(1) grayscale(1);mix-blend
   .nav-btn{width:28px;height:26px;font-size:12px;}
   .profile-list{gap:0 14px;max-width:none;}
   .masthead .status{font-size:7px;letter-spacing:.08em;}
-  .mat-grid{grid-template-columns:1fr;gap:10px}
-  .mat-img{height:80px}
-  .mat-txt{padding:13px 16px 18px;gap:8px}
-  .mat-cn{font-size:22px}
-  .epi{padding:32px 8px 26px}
+  .mast-right{gap:10px}
+  .music-btn{font-size:6px;letter-spacing:.1em;gap:5px}
+  .music-btn svg{width:16px;height:15px}
+  .mat-cn{font-size:20px}
+  .mat-ov{padding:0 14px}
   .cv-name{letter-spacing:.14em;text-indent:.14em}
   .cv-line{letter-spacing:.08em}
+  .fin-line{font-size:19px;letter-spacing:.01em}
 }
 </style>
 </head>
@@ -332,6 +367,36 @@ html[data-theme="ink"] .page-epi::before{filter:invert(1) grayscale(1);mix-blend
   </div>
 </div>
 
+<!-- ============ 独立尾页 ============ -->
+<div class="finale" id="finale" aria-hidden="true">
+  <div class="finale-bg" aria-hidden="true"></div>
+  <div class="finale-crosses" aria-hidden="true">
+    <span class="cv" style="left:7%;top:9%;width:30px;height:46px;--r:-16deg;--o:.18;--d:0s"></span>
+    <span class="cv" style="left:21%;top:4%;width:18px;height:28px;--r:14deg;--o:.12;--d:-3s"></span>
+    <span class="cv" style="left:38%;top:11%;width:22px;height:34px;--r:-24deg;--o:.10;--d:-5s"></span>
+    <span class="cv" style="left:61%;top:6%;width:34px;height:50px;--r:20deg;--o:.13;--d:-2s"></span>
+    <span class="cv" style="left:79%;top:12%;width:24px;height:36px;--r:-10deg;--o:.17;--d:-6s"></span>
+    <span class="cv" style="left:92%;top:7%;width:16px;height:26px;--r:28deg;--o:.14;--d:-1s"></span>
+    <span class="cv" style="left:5%;top:78%;width:20px;height:30px;--r:12deg;--o:.15;--d:-4s"></span>
+    <span class="cv" style="left:19%;top:89%;width:30px;height:44px;--r:-20deg;--o:.11;--d:-7s"></span>
+    <span class="cv" style="left:44%;top:92%;width:18px;height:28px;--r:22deg;--o:.13;--d:-2s"></span>
+    <span class="cv" style="left:68%;top:85%;width:26px;height:38px;--r:-14deg;--o:.16;--d:-5s"></span>
+    <span class="cv" style="left:88%;top:90%;width:20px;height:30px;--r:16deg;--o:.12;--d:-3s"></span>
+    <span class="cv" style="left:95%;top:66%;width:14px;height:22px;--r:-26deg;--o:.18;--d:-6s"></span>
+  </div>
+  <span class="fin-chain fin-chain-tl" aria-hidden="true"><i class="link"></i><i class="link"></i><i class="link"></i><i class="link"></i><i class="link"></i></span>
+  <span class="fin-chain fin-chain-br" aria-hidden="true"><i class="link"></i><i class="link"></i><i class="link"></i><i class="link"></i><i class="link"></i></span>
+  <div class="finale-inner">
+    <p class="fin-eyebrow">✦ &nbsp; ✦ &nbsp; ✦</p>
+    <p class="fin-line">I will love you subjectively before<br>we have any stake in each other</p>
+    <span class="fin-rule"></span>
+    <p class="fin-sub">Do not go gentle into that good night.</p>
+    <button class="fin-back" id="backBtn" type="button">回到开头 <span>↺</span></button>
+  </div>
+</div>
+
+<audio id="bgm" src="assets/ayu.mp3" loop preload="none"></audio>
+
 <main class="sheet">
   <span class="corner tl"></span><span class="corner tr"></span>
   <span class="corner bl"></span><span class="corner br"></span>
@@ -356,7 +421,18 @@ html[data-theme="ink"] .page-epi::before{filter:invert(1) grayscale(1);mix-blend
         <span class="brand-sub">Commission Sheet</span>
       </div>
     </div>
-    <div class="status"><span class="dot"></span><span>排单 · 可接</span></div>
+    <div class="mast-right">
+      <button class="music-btn" id="musicBtn" type="button" aria-pressed="false" title="开启 / 关闭背景音乐">
+        <svg viewBox="0 0 28 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M11 16.5V5l11-2v11.5"/>
+          <circle cx="8" cy="17" r="3"/>
+          <circle cx="19" cy="15" r="3"/>
+          <path d="M3.5 9.5c1.6 1.4 1.6 3.6 0 5"/>
+        </svg>
+        <span>SOUND <i id="musicState">OFF</i></span>
+      </button>
+      <div class="status"><span class="dot"></span><span>排单 · 可接</span></div>
+    </div>
   </header>
 
   <section class="hero">
@@ -396,7 +472,6 @@ html[data-theme="ink"] .page-epi::before{filter:invert(1) grayscale(1);mix-blend
     <button class="tab" type="button" role="tab" aria-selected="false" data-index="1"><span class="tab-no">02</span><span class="tab-cn">须知</span><span class="tab-en">NOTES</span></button>
     <button class="tab" type="button" role="tab" aria-selected="false" data-index="2"><span class="tab-no">03</span><span class="tab-cn">价目</span><span class="tab-en">RATES</span></button>
     <button class="tab" type="button" role="tab" aria-selected="false" data-index="3"><span class="tab-no">04</span><span class="tab-cn">资料</span><span class="tab-en">MATERIALS</span></button>
-    <button class="tab" type="button" role="tab" aria-selected="false" data-index="4"><span class="tab-no">05</span><span class="tab-cn">尾声</span><span class="tab-en">EPILOGUE</span></button>
   </nav>
 
   <div class="pages">
@@ -485,45 +560,29 @@ html[data-theme="ink"] .page-epi::before{filter:invert(1) grayscale(1);mix-blend
     <!-- 04 MATERIALS / 资料 -->
     <article class="page" role="tabpanel" data-index="3">
       <div class="page-head"><h2 class="page-title">资料 <em>Materials</em></h2><span class="page-ghost">04</span></div>
-      <p class="sec-label">Index / 索引 · 点击卡片跳转</p>
-      <div class="mat-grid">
-        <a class="mat-card" href="#" data-link="huashu" title="填入链接后可跳转">
-          <img class="mat-img" src="assets/ayu-statue-1.jpg" alt="雕像 · 上段" loading="lazy">
-          <span class="mat-txt"><span class="mat-no">01 · 上</span><span class="mat-cn">话术</span><span class="mat-en">SPEECH / SCRIPTS</span></span>
-          <span class="mat-arrow">↗</span>
+      <p class="sec-label">Index / 索引 · 点击图片跳转金山文档</p>
+      <div class="mat-stack">
+        <a class="mat-card" href="https://www.kdocs.cn/l/cnS8sPcU3xyw" target="_blank" rel="noopener" title="妤の随笔">
+          <img class="mat-img" src="assets/ayu-statue-1.jpg" alt="随笔 · 雕像上段" loading="lazy">
+          <span class="mat-ov"><span class="mat-no">01</span><span class="mat-cn">随笔</span><span class="mat-en">ESSAYS</span><span class="mat-arrow">↗</span></span>
         </a>
-        <a class="mat-card" href="#" data-link="banping" title="填入链接后可跳转">
-          <img class="mat-img" src="assets/ayu-statue-2.jpg" alt="雕像 · 中段" loading="lazy">
-          <span class="mat-txt"><span class="mat-no">02 · 中</span><span class="mat-cn">板评</span><span class="mat-en">BOARD REVIEWS</span></span>
-          <span class="mat-arrow">↗</span>
+        <a class="mat-card" href="https://www.kdocs.cn/l/ctTPHbG85sQP" target="_blank" rel="noopener" title="妤の话术">
+          <img class="mat-img" src="assets/ayu-statue-2.jpg" alt="话术 · 雕像中段" loading="lazy">
+          <span class="mat-ov"><span class="mat-no">02</span><span class="mat-cn">话术</span><span class="mat-en">SCRIPTS</span><span class="mat-arrow">↗</span></span>
         </a>
-        <a class="mat-card" href="#" data-link="kalei" title="填入链接后可跳转">
-          <img class="mat-img" src="assets/ayu-statue-3.jpg" alt="雕像 · 下段" loading="lazy">
-          <span class="mat-txt"><span class="mat-no">03 · 下</span><span class="mat-cn">卡类</span><span class="mat-en">CARD TYPES</span></span>
-          <span class="mat-arrow">↗</span>
+        <a class="mat-card" href="https://www.kdocs.cn/l/ckQHnfH5aCD1" target="_blank" rel="noopener" title="妤の板评_卡类">
+          <img class="mat-img" src="assets/ayu-statue-3.jpg" alt="板评-卡类 · 雕像下段" loading="lazy">
+          <span class="mat-ov"><span class="mat-no">03</span><span class="mat-cn">板评-卡类</span><span class="mat-en">BOARDS &amp; CARDS</span><span class="mat-arrow">↗</span></span>
         </a>
       </div>
-      <p class="hint">✦ &nbsp; 同一尊像自上而下均分为三段 · 三张卡片均为可放置跳转链接的元素；在源码 <b>MATERIAL_LINKS</b> 中填入对应网址即可生效。</p>
-    </article>
-
-    <!-- 05 EPILOGUE / 尾声 -->
-    <article class="page page-epi" role="tabpanel" data-index="4">
-      <div class="page-head"><h2 class="page-title">尾声 <em>Epilogue</em></h2><span class="page-ghost">05</span></div>
-      <div class="epi">
-        <p class="epi-star">✦</p>
-        <p class="epi-line">你一直点我我就一直在。</p>
-        <span class="epi-rule"></span>
-        <p class="epi-text">我们绝对平等，请不要让我一个人面对问题。<br>我很温良，也讲道理，只要好好说话。<br>只保证单内体验，不负责单外情绪。</p>
-        <p class="epi-sign">— 阿妤 · 观宴</p>
-        <p class="epi-end">F I N &nbsp; / &nbsp; 完</p>
-      </div>
+      <p class="hint">✦ &nbsp; 同一尊像自上而下均分为三段，中间断开而又能连上 · 点击任一段前往对应文档，按 → 继续。</p>
     </article>
 
   </div>
 
   <div class="page-nav">
     <button class="nav-btn" id="prevBtn" type="button" aria-label="Previous">←</button>
-    <div class="pager"><span id="pageNow">01</span><span id="pageTotal">/ 05</span><span class="pager-bar"><i></i></span></div>
+    <div class="pager"><span id="pageNow">01</span><span id="pageTotal">/ 04</span><span class="pager-bar"><i></i></span></div>
     <button class="nav-btn" id="nextBtn" type="button" aria-label="Next">→</button>
   </div>
 </main>
@@ -531,13 +590,6 @@ html[data-theme="ink"] .page-epi::before{filter:invert(1) grayscale(1);mix-blend
 <script>
 (function () {
   'use strict';
-
-  /* 资料页跳转链接：把网址填进引号里即可，例如 'https://www.kdocs.cn/l/xxxx' */
-  var MATERIAL_LINKS = {
-    huashu: '',
-    banping: '',
-    kalei: ''
-  };
 
   var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
   var pages = Array.prototype.slice.call(document.querySelectorAll('.page'));
@@ -547,6 +599,7 @@ html[data-theme="ink"] .page-epi::before{filter:invert(1) grayscale(1);mix-blend
   var prevBtn = document.getElementById('prevBtn');
   var nextBtn = document.getElementById('nextBtn');
   var cover = document.getElementById('cover');
+  var finale = document.getElementById('finale');
   var current = 0;
 
   function go(i) {
@@ -563,28 +616,40 @@ html[data-theme="ink"] .page-epi::before{filter:invert(1) grayscale(1);mix-blend
     bar.style.width = (100 / tabs.length) + '%';
     bar.style.left = (i * 100 / tabs.length) + '%';
     prevBtn.disabled = (i === 0);
-    nextBtn.disabled = (i === tabs.length - 1);
+    nextBtn.classList.toggle('to-finale', i === tabs.length - 1);
+    nextBtn.title = (i === tabs.length - 1) ? '继续 · 下一页' : '下一页';
+  }
+
+  /* 独立尾页 */
+  function openFinale() {
+    finale.classList.add('is-open');
+    finale.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('finale-on');
+  }
+  function closeFinale() {
+    finale.classList.remove('is-open');
+    finale.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('finale-on');
+  }
+  function backToStart() {
+    closeFinale();
+    cover.classList.remove('is-gone');
+    cover.style.display = '';
+    document.body.classList.add('cover-on');
+    go(0);
+    window.scrollTo(0, 0);
   }
 
   tabs.forEach(function (t, i) {
     t.addEventListener('click', function () { go(i); });
   });
   prevBtn.addEventListener('click', function () { go(current - 1); });
-  nextBtn.addEventListener('click', function () { go(current + 1); });
-  pageTotal.textContent = '/ ' + String(tabs.length).padStart(2, '0');
-
-  /* 资料卡片：填入链接后新窗口打开；未填时给出轻微提示 */
-  Array.prototype.slice.call(document.querySelectorAll('.mat-card')).forEach(function (a) {
-    a.addEventListener('click', function (e) {
-      e.preventDefault();
-      var url = MATERIAL_LINKS[a.getAttribute('data-link')];
-      if (url) { window.open(url, '_blank', 'noopener'); return; }
-      a.classList.remove('is-empty');
-      void a.offsetWidth;
-      a.classList.add('is-empty');
-      setTimeout(function () { a.classList.remove('is-empty'); }, 500);
-    });
+  nextBtn.addEventListener('click', function () {
+    if (current === tabs.length - 1) { openFinale(); }
+    else { go(current + 1); }
   });
+  pageTotal.textContent = '/ ' + String(tabs.length).padStart(2, '0');
+  document.getElementById('backBtn').addEventListener('click', backToStart);
 
   /* 封面进入 */
   function enter() {
@@ -600,7 +665,36 @@ html[data-theme="ink"] .page-epi::before{filter:invert(1) grayscale(1);mix-blend
     enter();
   });
 
+  /* 背景音乐开关 */
+  var bgm = document.getElementById('bgm');
+  var musicBtn = document.getElementById('musicBtn');
+  var musicState = document.getElementById('musicState');
+  function syncMusic() {
+    var on = !bgm.paused;
+    musicBtn.classList.toggle('is-on', on);
+    musicBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    musicState.textContent = on ? 'ON' : 'OFF';
+  }
+  musicBtn.addEventListener('click', function () {
+    if (bgm.paused) {
+      var p = bgm.play();
+      if (p && p.catch) {
+        p.catch(function () { musicState.textContent = '—'; });
+      }
+    } else {
+      bgm.pause();
+    }
+    syncMusic();
+  });
+  bgm.addEventListener('play', syncMusic);
+  bgm.addEventListener('pause', syncMusic);
+
   document.addEventListener('keydown', function (e) {
+    if (finale.classList.contains('is-open')) {
+      if (e.key === 'Escape' || e.key === 'ArrowLeft') { e.preventDefault(); closeFinale(); }
+      else if (e.key === 'Enter') { e.preventDefault(); backToStart(); }
+      return;
+    }
     if (!cover.classList.contains('is-gone')) {
       if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') {
         e.preventDefault();
@@ -608,9 +702,12 @@ html[data-theme="ink"] .page-epi::before{filter:invert(1) grayscale(1);mix-blend
       }
       return;
     }
-    if (e.key === 'ArrowRight') { go(current + 1); }
+    if (e.key === 'ArrowRight') {
+      if (current === tabs.length - 1) { openFinale(); }
+      else { go(current + 1); }
+    }
     else if (e.key === 'ArrowLeft') { go(current - 1); }
-    else if (/^[1-5]$/.test(e.key)) { go(Number(e.key) - 1); }
+    else if (/^[1-4]$/.test(e.key)) { go(Number(e.key) - 1); }
   });
 
   document.getElementById('themeToggle').addEventListener('click', function () {
